@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floating Widget Integration Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        
+        .code-example {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        
+        .code-example code {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        h2 {
+            color: #555;
+            margin-top: 2rem;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Floating Widget Integration Example</h1>
+    
+    <p>This page demonstrates how to integrate the floating widget into your website.</p>
+    
+    <div class="success-message">
+        ✅ The widget is active on this page! Look for the "Ask" button at the bottom center of your screen.
+    </div>
+    
+    <h2>Integration Code</h2>
+    <p>To add this widget to your website, simply include this script tag before the closing <code>&lt;/body&gt;</code> tag:</p>
+    
+    <div class="code-example">
+        <code>
+&lt;!-- Floating Widget --&gt;<br>
+&lt;script src="https://your-widget-domain.vercel.app/widget.js"&gt;&lt;/script&gt;
+        </code>
+    </div>
+    
+    <h2>Features Demonstrated</h2>
+    <ul>
+        <li>✨ Click the "Ask" button to see the expanded widget</li>
+        <li>🎯 Click outside or press ESC to close</li>
+        <li>🎨 Beautiful glass morphism design with gradient borders</li>
+        <li>📱 Responsive and works on all devices</li>
+        <li>⚡ Smooth animations and transitions</li>
+    </ul>
+    
+    <h2>Configuration Options</h2>
+    <p>You can configure the widget using data attributes:</p>
+    
+    <div class="code-example">
+        <code>
+&lt;script <br>
+&nbsp;&nbsp;src="https://your-widget-domain.vercel.app/widget.js"<br>
+&nbsp;&nbsp;data-position="bottom-right"<br>
+&nbsp;&nbsp;data-theme="dark"<br>
+&nbsp;&nbsp;data-z-index="1000"&gt;<br>
+&lt;/script&gt;
+        </code>
+    </div>
+    
+    <h2>Testing Different Scenarios</h2>
+    
+    <h3>1. Multiple Page Loads</h3>
+    <p>The widget prevents duplicate initialization. Try refreshing the page - you'll only see one widget instance.</p>
+    
+    <h3>2. Dynamic Loading</h3>
+    <div class="code-example">
+        <code>
+// Load widget dynamically<br>
+const script = document.createElement('script');<br>
+script.src = 'https://your-widget-domain.vercel.app/widget.js';<br>
+script.async = true;<br>
+document.body.appendChild(script);
+        </code>
+    </div>
+    
+    <h3>3. Framework Integration</h3>
+    <p>The widget works with any JavaScript framework (React, Vue, Angular, etc.) as it's completely self-contained.</p>
+    
+    <div class="note">
+        <strong>Note:</strong> Replace <code>your-widget-domain.vercel.app</code> with your actual Vercel deployment URL.
+    </div>
+    
+    <h2>Browser Compatibility</h2>
+    <ul>
+        <li>✅ Chrome (latest)</li>
+        <li>✅ Firefox (latest)</li>
+        <li>✅ Safari (latest)</li>
+        <li>✅ Edge (latest)</li>
+        <li>✅ Mobile browsers</li>
+    </ul>
+    
+    <h2>Troubleshooting</h2>
+    <p>If the widget doesn't appear:</p>
+    <ol>
+        <li>Check the browser console for errors</li>
+        <li>Verify the script URL is correct</li>
+        <li>Ensure your site allows external scripts (check CSP headers)</li>
+        <li>Try disabling ad blockers</li>
+    </ol>
+    
+    <!-- This is where you'll add the widget script after deployment -->
+    <!-- <script src="https://your-widget-domain.vercel.app/widget.js"></script> -->
+    
+    <!-- For local testing, you can use: -->
+    <script src="./dist/widget.js"></script>
+</body>
+</html>
