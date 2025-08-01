@@ -4,7 +4,7 @@ import {
   createGradientText, 
   STYLE_CONFIG, 
   applyCommonStyles,
-  applyGradientBorderWithFallback,
+  applyTrueGradientBorder,
   cleanupGradientBorder
 } from '../styles';
 import { addHoverEffects, addClickAnimation } from '../animations';
@@ -17,8 +17,11 @@ export class CollapsedState {
     button.setAttribute('data-widget-state', 'collapsed');
     button.style.cssText = createCollapsedButtonStyles();
     
-    // Apply modern mask-composite gradient border
-    applyGradientBorderWithFallback(button, '1px');
+    // Clean up any existing gradient border before applying new one
+    cleanupGradientBorder(button);
+    
+    // Apply true gradient border that respects border-radius
+    applyTrueGradientBorder(button, '1px');
     
     // Create content container
     const content = document.createElement('div');

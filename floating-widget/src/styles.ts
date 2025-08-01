@@ -20,6 +20,16 @@ export const STYLE_CONFIG: StyleConfig = {
     boxShadow: '0 1.272px 15.267px rgba(0, 0, 0, 0.05)',
     backdropFilter: 'blur(10px)'
   },
+  typingWidget: {
+    width: '348px',
+    height: '205px',
+    borderRadius: '30px',
+    padding: '10px',
+    background: 'rgba(255, 255, 255, 0.10)',
+    border: '1px solid transparent',
+    boxShadow: '0 1.272px 15.267px rgba(0, 0, 0, 0.05)',
+    backdropFilter: 'blur(10px)'
+  },
   gradients: {
     primary: 'linear-gradient(90deg, #B8FFE3 0%, #C081FF 100%)',
     border: 'linear-gradient(90deg, #B8FFE3 0%, #C081FF 100%)'
@@ -41,13 +51,15 @@ export function applyGradientBorder(element: HTMLElement, gradient: string): voi
   element.style.backgroundOrigin = 'padding-box, border-box';
 }
 
-// Modern mask-composite gradient border implementation
+// Modern mask-composite gradient border implementation that respects border-radius
 export function applyTrueGradientBorder(element: HTMLElement, borderWidth: string = '1px'): void {
   // Ensure element has relative positioning for pseudo-element
-  element.style.position = 'relative';
+  if (element.style.position !== 'absolute' && element.style.position !== 'fixed') {
+    element.style.position = 'relative';
+  }
   
   // Generate unique identifier for this element's gradient border
-  const pseudoElementId = `gradient-border-${Math.random().toString(36).substr(2, 9)}`;
+  const pseudoElementId = `gradient-border-${Math.random().toString(36).substring(2, 11)}`;
   element.setAttribute('data-gradient-border', pseudoElementId);
   
   // Create and inject CSS for pseudo-element
@@ -93,22 +105,31 @@ export function supportsMaskComposite(): boolean {
   return false;
 }
 
-// Gradient border with fallback support
+// DEPRECATED: Gradient border implementation using border-image (incompatible with border-radius)
+// WARNING: border-image does not work with border-radius. Use applyTrueGradientBorder() instead.
 export function applyGradientBorderWithFallback(element: HTMLElement, borderWidth: string = '1px'): void {
-  if (supportsMaskComposite()) {
-    applyTrueGradientBorder(element, borderWidth);
+  console.warn('⚠️  applyGradientBorderWithFallback is deprecated. Use applyTrueGradientBorder() for border-radius compatibility.');
+  
+  // Check if browser supports border-image (most modern browsers do)
+  if (CSS.supports('border-image', 'linear-gradient(0deg, red, blue) 1')) {
+    // Modern border-image approach - creates true gradient border (NO BORDER-RADIUS SUPPORT)
+    element.style.border = `${borderWidth} solid transparent`;
+    element.style.borderImage = `${STYLE_CONFIG.gradients.border} 1`;
+    element.style.borderImageSlice = '1';
   } else {
-    // Fallback to the original background-based approach
+    // Fallback for older browsers - use background layers
     element.style.background = `
-      linear-gradient(${STYLE_CONFIG.collapsedButton.background}, ${STYLE_CONFIG.collapsedButton.background}) padding-box,
       ${STYLE_CONFIG.gradients.border} border-box
     `;
     element.style.border = `${borderWidth} solid transparent`;
+    element.style.backgroundClip = 'border-box';
+    element.style.backgroundOrigin = 'border-box';
   }
 }
 
 // Cleanup function for gradient border styles
 export function cleanupGradientBorder(element: HTMLElement): void {
+  // Clean up old complex gradient border attributes
   const pseudoElementId = element.getAttribute('data-gradient-border');
   if (pseudoElementId) {
     const styleElement = document.querySelector(`style[data-gradient-border-style="${pseudoElementId}"]`);
@@ -117,6 +138,23 @@ export function cleanupGradientBorder(element: HTMLElement): void {
     }
     element.removeAttribute('data-gradient-border');
   }
+  
+  // Clean up old simple gradient border attributes
+  const simplePseudoElementId = element.getAttribute('data-simple-gradient-border');
+  if (simplePseudoElementId) {
+    const simpleStyleElement = document.querySelector(`style[data-simple-gradient-border-style="${simplePseudoElementId}"]`);
+    if (simpleStyleElement && simpleStyleElement.parentNode) {
+      simpleStyleElement.parentNode.removeChild(simpleStyleElement);
+    }
+    element.removeAttribute('data-simple-gradient-border');
+  }
+  
+  // Clean up new border-image gradient border styles
+  element.style.border = '';
+  element.style.borderImage = '';
+  element.style.borderImageSlice = '';
+  element.style.backgroundClip = '';
+  element.style.backgroundOrigin = '';
 }
 
 export function createGradientText(text: string, gradient: string): HTMLElement {
@@ -200,6 +238,28 @@ export function createExpandedWidgetStyles(): string {
     transform: scale(1);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+  `;
+}
+
+export function createTypingWidgetStyles(): string {
+  return `
+    width: ${STYLE_CONFIG.typingWidget.width};
+    height: ${STYLE_CONFIG.typingWidget.height};
+    border-radius: ${STYLE_CONFIG.typingWidget.borderRadius};
+    padding: ${STYLE_CONFIG.typingWidget.padding};
+    background: ${STYLE_CONFIG.typingWidget.background};
+    border: ${STYLE_CONFIG.typingWidget.border};
+    box-shadow: ${STYLE_CONFIG.typingWidget.boxShadow};
+    backdrop-filter: ${STYLE_CONFIG.typingWidget.backdropFilter};
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transform-origin: center center;
+    transform: scale(1);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: height 0.3s ease;
   `;
 }
 
@@ -361,3 +421,4 @@ export function addGoogleFonts(): void {
     document.head.appendChild(link);
   }
 }
+
